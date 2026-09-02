@@ -38,12 +38,33 @@ public class FirstTest {
         assertThat(total).isEqualTo(300);
     }
 
-    int amount = 100;
-    public boolean isValidPayment(int amount);
-    if (amount > 0) {
-        return true;
-    } else {
-        return false;
+
+    public boolean isValidPayment(int amount) {
+        if (amount > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-}
+    @Test
+    public void checkValidPayment1() {
+        assertThat(isValidPayment(1000)).isEqualTo(true);
+        assertThat(isValidPayment(0)).isEqualTo(false);
+    }
+
+    public boolean isValidPayment(int amount, String currency) {
+        if (amount > 0 && currency.equals("RUB")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+        @Test
+        public void checkValidPayment() {
+            assertThat(isValidPayment(1000, "RUB")).isTrue();
+            assertThat(isValidPayment(1000, "USD")).isFalse();
+            assertThat(isValidPayment(0, "RUB")).isFalse();
+        }
+    }
