@@ -12,7 +12,7 @@ public class DataProvider {
                 {1, "RUB", true},
                 {-100, "RUB", false}
         }
-    }
+    }1
 
     @Test
 
