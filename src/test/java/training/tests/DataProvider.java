@@ -12,8 +12,10 @@ public class DataProvider {
                 {1, "RUB", true},
                 {-100, "RUB", false}
         }
-    }1
+    }
 
-    @Test
+    @Test(dataProvider = "payments")
+    public void checkValidPayment(int amount, String currency, boolean expected) {
+    }
 
 }
