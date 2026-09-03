@@ -2,6 +2,7 @@ package training.tests;
 
 import org.testng.annotations.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+import org.testng.annotations.DataProvider;
 
 public class FirstTest {
     @Test
@@ -34,7 +35,7 @@ public class FirstTest {
 
     @Test
     public void checkCalculateAmount() {
-        int total = calculateAmount(100,3);
+        int total = calculateAmount(100, 3);
         assertThat(total).isEqualTo(300);
     }
 
@@ -61,10 +62,27 @@ public class FirstTest {
         }
     }
 
-        @Test
-        public void checkValidPayment() {
-            assertThat(isValidPayment(1000, "RUB")).isTrue();
-            assertThat(isValidPayment(1000, "USD")).isFalse();
-            assertThat(isValidPayment(0, "RUB")).isFalse();
+    @Test
+    public void checkValidPayment() {
+        assertThat(isValidPayment(1000, "RUB")).isTrue();
+        assertThat(isValidPayment(1000, "USD")).isFalse();
+        assertThat(isValidPayment(0, "RUB")).isFalse();
+    }
+
+        @DataProvider (name ="payments")
+
+        public Object[][] payments() {
+            return new Object[][]{
+                    {1000, "RUB", true},
+                    {1000, "USD", false},
+                    {0, "RUB", false},
+                    {1, "RUB", true},
+                    {-100, "RUB", false}
+            };
+        }
+
+        @Test(dataProvider = "payments")
+        public void checkValidPayment(int amount, String currency, boolean expected) {
+            assertThat(isValidPayment(amount, currency)).isEqualTo(expected);
         }
     }
