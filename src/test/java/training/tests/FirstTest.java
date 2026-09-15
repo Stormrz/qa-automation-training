@@ -84,5 +84,5 @@ public class FirstTest {
         @Test(dataProvider = "payments")
         public void checkValidPayment(int amount, String currency, boolean expected) {
             assertThat(isValidPayment(amount, currency)).isEqualTo(expected);
-        }2
+        }
     }
