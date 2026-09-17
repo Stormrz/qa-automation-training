@@ -95,8 +95,22 @@ public class jsonPlaceTest {
                 .statusCode(200)
                 .body("id", equalTo(1))
                 .body("userId",equalTo(1))
-                .body("title", notNullValue())
-                .body()
+                .body("title", notNullValue());
+
+        List<Integer> ids = response.jsonPath()
+                .getList("findAll { it.status == 'SUCCESS' }.collect { it.id }");
+
+        int count = response.jsonPath()
+                .getList("findAll { it.status == 'SUCCESS' }")
+                .size();
+
+        assertThat(ids).containsExactly(1, 3);
+        assertThat(count).isEqualTo(2);
+
+        List<Integer> amount = response.jsonPath()
+                .getList("findAll { it.status == 'SUCCESS' }.collect { it.amount }");
+        assertThat(amount)
+                .allSatisfy(value -> assertThat(value).isGreaterThan(0));
     }
 
 
