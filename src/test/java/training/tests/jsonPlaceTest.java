@@ -1,6 +1,7 @@
 package training.tests;
 
 import io.restassured.response.Response;
+import org.hamcrest.Matcher;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.hasItems;
 
 public class jsonPlaceTest {
 
@@ -96,5 +98,21 @@ public class jsonPlaceTest {
                 .body("id", equalTo(1))
                 .body("userId",equalTo(1))
                 .body("title", notNullValue());
+    }
+
+    @Test
+    public void matcherTest() {
+        Response response = given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .when()
+                .get("/posts?userId=1&_limit=3");
+        response.then()
+                .statusCode(200)
+                .body("id", hasItems(1, 2 , 3));
+
+
+        List <Integer> id = (response.jsonPath().getList(("findAll { it.status == 'SUCCESS' }.collect { it.id }");));
+        int count = response.jsonPath().getList("findall { it.status == 'SUCCESS' }").size()
+        assertThat(count).isEqualTo(2);
     }
 }
