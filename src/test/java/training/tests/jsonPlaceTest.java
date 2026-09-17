@@ -95,6 +95,9 @@ public class jsonPlaceTest {
                 .statusCode(200)
                 .body("id", equalTo(1))
                 .body("userId",equalTo(1))
-                .body("title", notNullValue());
+                .body("title", notNullValue())
+                .body()
     }
+
+
 }
