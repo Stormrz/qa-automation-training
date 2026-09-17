@@ -113,5 +113,16 @@ public class jsonPlaceTest {
                 .allSatisfy(value -> assertThat(value).isGreaterThan(0));
     }
 
+    @Test
+    public void headerTest() {
+        Response response = given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .when()
+                .get("/posts/1");
+        response.then()
+                .log().headers()
+                .header("Content-Type", equalTo("application/json; charset=utf-8"));
+
+    }
 
 }
