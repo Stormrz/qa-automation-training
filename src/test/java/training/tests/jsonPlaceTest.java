@@ -1,19 +1,20 @@
 package training.tests;
 
 import io.restassured.response.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 //import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class jsonPlaceTest {
+
+    private static final Logger log = LoggerFactory.getLogger(jsonPlaceTest.class);
 
     @Test
     public void getPost() {
@@ -123,6 +124,29 @@ public class jsonPlaceTest {
                 .log().headers()
                 .header("Content-Type", equalTo("application/json; charset=utf-8"));
 
+    }
+
+    @Test
+    public void headers() {
+        String requestBody = """
+{
+  "title": "QA test",
+  "body": "Hello API",
+  "userId": 1
+}
+""";
+
+        Response response = given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .header("Content-Type", "application/json")
+                .body(requestBody)
+                .when()
+                .log().headers()
+                .post("/posts");
+        response.then()
+                .statusCode(201)
+                .log().body()
+                .body("id", greaterThanOrEqualTo(1));
     }
 
 }
