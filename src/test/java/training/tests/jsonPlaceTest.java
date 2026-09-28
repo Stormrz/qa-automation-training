@@ -11,6 +11,8 @@ import static io.restassured.RestAssured.given;
 //import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class jsonPlaceTest {
 
@@ -146,7 +148,10 @@ public class jsonPlaceTest {
         response.then()
                 .statusCode(201)
                 .log().body()
-                .body("id", greaterThanOrEqualTo(1));
+                .body("id", greaterThanOrEqualTo(1))
+                .body("title", equalTo("QA test"))
+                .body("body", equalTo("Hello API"))
+                .body("userId", equalTo("1"));
     }
 
 }
