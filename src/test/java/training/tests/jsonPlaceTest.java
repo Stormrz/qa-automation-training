@@ -129,7 +129,7 @@ public class jsonPlaceTest {
     }
 
     @Test
-    public void headers() {
+    public void headersAndPostTest() {
         String requestBody = """
 {
   "title": "QA test",
@@ -148,10 +148,54 @@ public class jsonPlaceTest {
         response.then()
                 .statusCode(201)
                 .log().body()
-                .body("id", greaterThanOrEqualTo(1))
+                .body("id", equalTo(101))
                 .body("title", equalTo("QA test"))
                 .body("body", equalTo("Hello API"))
-                .body("userId", equalTo("1"));
+                .body("userId", equalTo(1));
+    }
+
+    @Test
+    public void negativeTest() {
+        String requestBody = """
+{
+  "body": "Hello API",
+  "userId": 1
+}
+""";
+
+        Response response = given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .header("Content-Type", "application/json")
+                .body(requestBody)
+                .when()
+                .log().headers()
+                .post("/posts");
+        response.then()
+                .statusCode(400)
+                .body("error", equalTo("VALIDATION_ERROR"))
+                .body("message", containsString("title"));
+    }
+
+    @Test
+    public void paymentTest() {
+        String requestBody = """
+{
+  "amount": 1000,
+  "currency": "RUB"
+}
+""";
+        Response response = given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .header("Content-Type", "application/json")
+                .body(requestBody)
+                .when()
+                .post("/payments");
+        response.then()
+                .statusCode(201)
+                .body("id", equalTo(12345))
+                .body("amount", equalTo(1000))
+                .body("currency", equalTo("RUB"))
+                .body("status", equalTo("CREATED"))
     }
 
 }
