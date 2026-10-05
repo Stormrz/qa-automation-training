@@ -1,23 +1,21 @@
-package training.tests.Environment;
+package training.tests.environment;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import static io.restassured.RestAssured.given;
 
-public class PostClient {
-
+public class UserClient {
     private final RequestSpecification requestSpec;
 
-    public PostClient(RequestSpecification requestSpec) {
+    public UserClient (RequestSpecification requestSpec) {
         this.requestSpec = requestSpec;
     }
 
-    public Response createPost(String requestBody) {
-
+    public Response getUser (int id) {
         return given(requestSpec)
-                .body(requestBody)
+                .pathParam("id", id)
                 .when()
-                .post("/posts");
+                .get("/users/{id}");
     }
 }

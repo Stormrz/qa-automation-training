@@ -7,6 +7,8 @@ import io.restassured.specification.ResponseSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
+import training.tests.environment.PostClient;
+import training.tests.environment.UserClient;
 
 import java.util.List;
 
@@ -227,6 +229,37 @@ public class jsonPlaceTest {
                 response.then()
                         .spec(responseSpec)
                         .body("id", greaterThanOrEqualTo(1));
+    }
+
+    @Test
+    public void createPostTest() {
+
+        String requestBody = """
+            {
+              "title": "QA test",
+              "body": "Hello API",
+              "userId": 1
+            }
+            """;
+
+        PostClient postClient = new PostClient(requestSpec);
+
+        Response response = postClient.createPost(requestBody);
+
+        response.then()
+                .spec(responseSpec)
+                .body("id", greaterThanOrEqualTo(1));
+    }
+
+    @Test
+    public void createGetUserTest() {
+        UserClient userClient = new UserClient(requestSpec);
+
+        Response response = userClient.getUser(5);
+
+        response.then()
+                .log().all()
+                .statusCode(200);
     }
 
 }
