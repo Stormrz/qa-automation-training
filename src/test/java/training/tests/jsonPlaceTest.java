@@ -1,12 +1,16 @@
 package training.tests;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.expect;
 import static io.restassured.RestAssured.given;
 //import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -180,7 +184,7 @@ public class jsonPlaceTest {
     public void paymentTest() {
         String requestBody = """
 {
-  "amount": 1000,
+  "amount": 0,
   "currency": "RUB"
 }
 """;
@@ -191,11 +195,38 @@ public class jsonPlaceTest {
                 .when()
                 .post("/payments");
         response.then()
-                .statusCode(201)
-                .body("id", equalTo(12345))
-                .body("amount", equalTo(1000))
-                .body("currency", equalTo("RUB"))
-                .body("status", equalTo("CREATED"))
+                .statusCode(400)
+                .body("error", equalTo("VALIDATION_ERROR"))
+                .body("message", equalTo("amount must be greater than 0"))
+                .body("message", contains("amount"))
+                .body("message", contains("greater than 0"));
+    }
+
+    private final RequestSpecification requestSpec = given()
+            .baseUri("https://jsonplaceholder.typicode.com")
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer token random generator");
+
+    private final ResponseSpecification responseSpec = expect()
+            .statusCode(201)
+            .contentType(ContentType.JSON);
+
+    @Test
+    public void reqTest() {
+        String requestBody = """
+{
+  "body": "Hello API",
+  "userId": 1
+}
+""";
+
+        Response response = given(requestSpec)
+                .body(requestBody)
+                .when()
+                .post("/posts");
+                response.then()
+                        .spec(responseSpec)
+                        .body("id", greaterThanOrEqualTo(1));
     }
 
 }
