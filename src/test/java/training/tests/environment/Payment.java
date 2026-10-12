@@ -9,7 +9,7 @@ public class Payment {
 
     private final String currency;
 
-    public Payment payment (amount, currency) {
+    public Payment (int amount, String currency) {
         this.amount = amount;
         this.currency = currency;
     }
@@ -18,22 +18,7 @@ public class Payment {
         return amount;
     }
 
-    public int getCurrency() {
+    public String getCurrency() {
     return currency;
-    }
-
-    public Response postPayment(int amount, String currency) {
-
-        String requestBody = """
-            {
-                "amount": %d,
-                "currency": "%s"
-            }
-            """.formatted(amount, currency);
-
-        return given()
-                .body(requestBody)
-                .when()
-                .post("/payments");
     }
 }

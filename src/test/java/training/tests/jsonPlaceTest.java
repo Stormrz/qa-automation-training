@@ -7,6 +7,8 @@ import io.restassured.specification.ResponseSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
+import training.tests.environment.Payment;
+import training.tests.environment.PaymentClient;
 import training.tests.environment.PostClient;
 import training.tests.environment.UserClient;
 
@@ -262,4 +264,27 @@ public class jsonPlaceTest {
                 .statusCode(200);
     }
 
-}
+    @Test(description = "Создание объекта через API")
+    public void paymentFromObject() {
+        Payment payment = new Payment(1000, "RUB");
+        PaymentClient paymentClient = new PaymentClient(requestSpec);
+
+        Response response = paymentClient.postPayment(payment);
+
+        response.then()
+                .log().all()
+                .statusCode(201)
+                .body("amount", equalTo(1000))
+                .body("currency", equalTo("RUB"));
+        int id = response.jsonPath().getInt("id");
+        assertThat(id).isEqualTo(101);
+        assertThat(response.jsonPath().getInt("id"))
+                .isGreaterThan(0);
+    }
+
+    @Test
+    public void testGetUser() {
+        UserClient userClient = new UserClient(requestSpec);
+        Response response = userClient.getUser(5);
+response.then()}
+    ,

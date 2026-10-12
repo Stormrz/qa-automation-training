@@ -21,19 +21,14 @@ public class PaymentClient {
                 .get("/payments/{id}");
     }
 
-    public Response postPayment(int amount, String currency) {
-
-        String requestBody = """
-            {
-                "amount": %d,
-                "currency": "%s"
-            }
-            """.formatted(amount, currency);
+    public Response postPayment(Payment payment) {
 
         return given(requestSpec)
-                .body(requestBody)
+                .body(payment)
                 .when()
-                .post("/payments");
+                .post("/posts");
     }
+
+
 
 }

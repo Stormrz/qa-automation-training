@@ -18,19 +18,4 @@ public class UserClient {
                 .when()
                 .get("/users/{id}");
     }
-
-    public Response postPayment(int amount, String currency) {
-
-        String requestBody = """
-            {
-                "amount": %d,
-                "currency": "%s"
-            }
-            """.formatted(amount, currency);
-
-        return given(requestSpec)
-                .body(requestBody)
-                .when()
-                .post("/payments");
-    }
 }
