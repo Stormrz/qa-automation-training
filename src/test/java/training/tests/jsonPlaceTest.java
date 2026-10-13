@@ -6,6 +6,7 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import training.tests.environment.Payment;
 import training.tests.environment.PaymentClient;
@@ -34,21 +35,21 @@ public class jsonPlaceTest {
                 .get("/posts/1")
                 .then()
                 .statusCode(200)
-                .body("id",equalTo(1))
-                .body("userId",equalTo(1))
-                .body("title",notNullValue())
+                .body("id", equalTo(1))
+                .body("userId", equalTo(1))
+                .body("title", notNullValue())
                 .log().body();
     }
 
     @Test
     public void createPost() {
         String requestBody = """
-{
-  "title": "QA test",
-  "body": "Hello API",
-  "userId": 1
-}
-""";
+                {
+                  "title": "QA test",
+                  "body": "Hello API",
+                  "userId": 1
+                }
+                """;
         int postId = 1;
         Response response = given()
                 .baseUri("https://jsonplaceholder.typicode.com")
@@ -56,7 +57,7 @@ public class jsonPlaceTest {
                 .log().all()
                 .when()
                 .post("/posts");
-                response.then()
+        response.then()
                 .statusCode(201);
         postId = response.jsonPath().getInt("id");
         System.out.println(postId);
@@ -76,8 +77,9 @@ public class jsonPlaceTest {
         assertThat(getId).isEqualTo(postId);
         System.out.println("getID" + getId);
     }
+
     @Test
-    public void queryTest () {
+    public void queryTest() {
         Response response = given()
                 .baseUri("https://jsonplaceholder.typicode.com")
                 .queryParam("userId", 1)
@@ -85,12 +87,12 @@ public class jsonPlaceTest {
                 .log().all()
                 .when()
                 .get("/posts");
-                response.then()
-                        .log().all()
+        response.then()
+                .log().all()
                 .statusCode(200);
-                int countArray = response.jsonPath().getList("$").size();
-                assertThat(countArray).isEqualTo(3);
-        List <Integer> userIds = (response.jsonPath().getList("userId"));
+        int countArray = response.jsonPath().getList("$").size();
+        assertThat(countArray).isEqualTo(3);
+        List<Integer> userIds = (response.jsonPath().getList("userId"));
         assertThat(userIds).containsOnly(1);
         int count = response.jsonPath().getList("findAll {it.userId == 1 }").size();
         System.out.println(count);
@@ -105,7 +107,7 @@ public class jsonPlaceTest {
         response.then()
                 .statusCode(200)
                 .body("id", equalTo(1))
-                .body("userId",equalTo(1))
+                .body("userId", equalTo(1))
                 .body("title", notNullValue());
 
         List<Integer> ids = response.jsonPath()
@@ -139,12 +141,12 @@ public class jsonPlaceTest {
     @Test
     public void headersAndPostTest() {
         String requestBody = """
-{
-  "title": "QA test",
-  "body": "Hello API",
-  "userId": 1
-}
-""";
+                {
+                  "title": "QA test",
+                  "body": "Hello API",
+                  "userId": 1
+                }
+                """;
 
         Response response = given()
                 .baseUri("https://jsonplaceholder.typicode.com")
@@ -165,11 +167,11 @@ public class jsonPlaceTest {
     @Test
     public void negativeTest() {
         String requestBody = """
-{
-  "body": "Hello API",
-  "userId": 1
-}
-""";
+                {
+                  "body": "Hello API",
+                  "userId": 1
+                }
+                """;
 
         Response response = given()
                 .baseUri("https://jsonplaceholder.typicode.com")
@@ -187,11 +189,11 @@ public class jsonPlaceTest {
     @Test
     public void paymentTest() {
         String requestBody = """
-{
-  "amount": 0,
-  "currency": "RUB"
-}
-""";
+                {
+                  "amount": 0,
+                  "currency": "RUB"
+                }
+                """;
         Response response = given()
                 .baseUri("https://jsonplaceholder.typicode.com")
                 .header("Content-Type", "application/json")
@@ -218,31 +220,31 @@ public class jsonPlaceTest {
     @Test
     public void reqTest() {
         String requestBody = """
-{
-  "body": "Hello API",
-  "userId": 1
-}
-""";
+                {
+                  "body": "Hello API",
+                  "userId": 1
+                }
+                """;
 
         Response response = given(requestSpec)
                 .body(requestBody)
                 .when()
                 .post("/posts");
-                response.then()
-                        .spec(responseSpec)
-                        .body("id", greaterThanOrEqualTo(1));
+        response.then()
+                .spec(responseSpec)
+                .body("id", greaterThanOrEqualTo(1));
     }
 
     @Test
     public void createPostTest() {
 
         String requestBody = """
-            {
-              "title": "QA test",
-              "body": "Hello API",
-              "userId": 1
-            }
-            """;
+                {
+                  "title": "QA test",
+                  "body": "Hello API",
+                  "userId": 1
+                }
+                """;
 
         PostClient postClient = new PostClient(requestSpec);
 
@@ -286,5 +288,22 @@ public class jsonPlaceTest {
     public void testGetUser() {
         UserClient userClient = new UserClient(requestSpec);
         Response response = userClient.getUser(5);
-response.then()}
-    ,
+        response.then()
+                .log().all()
+                .statusCode(200);
+        int id = response.jsonPath().getInt("id");
+        assertThat(id).isEqualTo(5);
+        assertThat(response.jsonPath().getString("name")).isNotBlank();
+    }
+
+    @Test
+    public void dataProviderGetUserTest() {
+        @DataProvider(name = 'userIds')
+                public Object[][] userIds() {
+            return new Object[][]{
+                    {1}, {5}, {10}
+            }
+        };
+
+    }
+}
