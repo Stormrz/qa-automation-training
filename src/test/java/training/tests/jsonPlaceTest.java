@@ -296,14 +296,24 @@ public class jsonPlaceTest {
         assertThat(response.jsonPath().getString("name")).isNotBlank();
     }
 
-    @Test
-    public void dataProviderGetUserTest() {
-        @DataProvider(name = 'userIds')
-                public Object[][] userIds() {
-            return new Object[][]{
-                    {1}, {5}, {10}
-            }
+    @DataProvider(name = "userIds")
+    public Object[][] userIds() {
+        return new Object[][]{
+                {1},
+                {5},
+                {10}
         };
-
     }
-}
+
+    @Test(dataProvider = "userIds")
+    public void dataProviderGetUserTest(int userId) {
+        UserClient userClient = new UserClient(requestSpec);
+        Response response = userClient.getUser(userId);
+        response.then()
+                .log().all()
+                .statusCode(200);
+        int id = response.jsonPath().getInt("id");
+        assertThat(id).isEqualTo(userId);
+        assertThat(response.jsonPath().getString("name")).isNotBlank();
+    }
+    }
