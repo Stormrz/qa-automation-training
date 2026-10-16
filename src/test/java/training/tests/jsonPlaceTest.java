@@ -1,6 +1,7 @@
 package training.tests;
 
 import io.restassured.http.ContentType;
+import io.restassured.internal.RestAssuredResponseOptionsImpl;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -8,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import training.tests.environment.Payment;
-import training.tests.environment.PaymentClient;
-import training.tests.environment.PostClient;
-import training.tests.environment.UserClient;
+import training.tests.environment.*;
 
 import java.util.List;
 
@@ -316,4 +314,14 @@ public class jsonPlaceTest {
         assertThat(id).isEqualTo(userId);
         assertThat(response.jsonPath().getString("name")).isNotBlank();
     }
+
+    @Test
+    public void deserializationTest() {
+        UserClient userClient = new UserClient(requestSpec);
+        Response response = userClient.getUser(5);
+        response.then();
+
+        User user = response.as(User.class);
+    }
+
     }
