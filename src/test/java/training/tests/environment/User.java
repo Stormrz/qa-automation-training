@@ -1,5 +1,8 @@
-package training.tests.environment;
 
+package training.tests.environment;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
     private int id;
     private String name;
@@ -16,19 +19,45 @@ public class User {
     public User() {
     }
 
-    public getId() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public getName() {
+    public String getName() {
         return name;
     }
 
-    public getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public getEmail() {
+    public String getEmail() {
         return email;
+    }
+
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

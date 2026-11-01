@@ -317,11 +317,28 @@ public class jsonPlaceTest {
 
     @Test
     public void deserializationTest() {
+
         UserClient userClient = new UserClient(requestSpec);
+
         Response response = userClient.getUser(5);
-        response.then();
+        response.then().statusCode(200);
 
         User user = response.as(User.class);
+
+        System.out.println("City: " + user.getAddress().getCity());
+        System.out.println("Street: " + user.getAddress().getStreet());
+        System.out.println("Zipcode: " + user.getAddress().getZipcode());
+
+        assertThat(user.getId()).isEqualTo(5);
+        assertThat(user.getUsername()).isNotBlank();
+        assertThat(user.getEmail()).contains("@");
+        assertThat(user.getName()).isNotBlank();
+
+        System.out.println("ID: " + user.getId());
+        System.out.println("Name: " + user.getName());
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Email: " + user.getEmail());
+
     }
 
     }
