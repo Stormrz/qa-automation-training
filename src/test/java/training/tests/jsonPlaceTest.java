@@ -334,6 +334,11 @@ public class jsonPlaceTest {
         assertThat(user.getEmail()).contains("@");
         assertThat(user.getName()).isNotBlank();
 
+        assertThat(user.getAddress().getCity())
+                .isEqualTo("Roscoeview");
+        assertThat(user.getAddress().getStreet())
+                .isEqualTo("Skiles Walks");
+
         System.out.println("ID: " + user.getId());
         System.out.println("Name: " + user.getName());
         System.out.println("Username: " + user.getUsername());
