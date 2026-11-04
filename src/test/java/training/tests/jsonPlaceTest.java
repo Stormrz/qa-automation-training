@@ -403,6 +403,6 @@ public class jsonPlaceTest {
         List<Integer> ids = users.stream()
                 .filter(user -> user.getId() > 5)
                 .map(user -> user.getId())
-                .toList();
+                .toList();р
     }
     }
