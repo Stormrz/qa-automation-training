@@ -387,4 +387,22 @@ public class jsonPlaceTest {
                 .toList();
     }
 
+    public void mapTest() {
+        Response response = given(requestSpec)
+                .when()
+                .get("/users");
+
+        List<User> users = response.as(
+                new TypeRef<List<User>>() {}
+        );
+
+        List<String> emails = users.stream()
+                .map(user -> user.getEmail())
+                .toList();
+
+        List<Integer> ids = users.stream()
+                .filter(user -> user.getId() > 5)
+                .map(user -> user.getId())
+                .toList();
+    }
     }
