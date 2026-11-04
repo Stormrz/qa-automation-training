@@ -1,6 +1,7 @@
 package training.tests;
 
 import io.restassured.http.ContentType;
+import io.restassured.internal.RestAssuredResponseOptionsImpl;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -8,10 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import training.tests.environment.Payment;
-import training.tests.environment.PaymentClient;
-import training.tests.environment.PostClient;
-import training.tests.environment.UserClient;
+import training.tests.environment.*;
+import java.util.List;
+import io.restassured.common.mapper.TypeRef;
 
 import java.util.List;
 
@@ -316,4 +316,75 @@ public class jsonPlaceTest {
         assertThat(id).isEqualTo(userId);
         assertThat(response.jsonPath().getString("name")).isNotBlank();
     }
+
+    @Test
+    public void deserializationTest() {
+
+        UserClient userClient = new UserClient(requestSpec);
+
+        Response response = userClient.getUser(5);
+        response.then().statusCode(200);
+
+        User user = response.as(User.class);
+
+        System.out.println("City: " + user.getAddress().getCity());
+        System.out.println("Street: " + user.getAddress().getStreet());
+        System.out.println("Zipcode: " + user.getAddress().getZipcode());
+
+        assertThat(user.getId()).isEqualTo(5);
+        assertThat(user.getUsername()).isNotBlank();
+        assertThat(user.getEmail()).contains("@");
+        assertThat(user.getName()).isNotBlank();
+
+        assertThat(user.getAddress().getCity())
+                .isEqualTo("Roscoeview");
+        assertThat(user.getAddress().getStreet())
+                .isEqualTo("Skiles Walks");
+
+        System.out.println("ID: " + user.getId());
+        System.out.println("Name: " + user.getName());
+        System.out.println("Username: " + user.getUsername());
+        System.out.println("Email: " + user.getEmail());
+
+    }
+
+    @Test
+    public void getUsersTestList() {
+        Response response = given(requestSpec)
+                .when()
+                .get("/users");
+
+        response.then().statusCode(200);
+
+        List<User> users = response.as(
+                new TypeRef<List<User>>() {}
+        );
+        System.out.println("Количество пользователей: " + users.size());
+
+        for (User user : users) {
+            System.out.println("ID: " + user.getId());
+            System.out.println("Name: " + user.getName());
+            System.out.println("----------------");
+        }
+        for (User user : users) {
+            System.out.println("Email:" + user.getEmail());
+        }
+    }
+
+    @Test
+    public void lambdaTest() {
+        Response response = given(requestSpec)
+                .when()
+                .get("/users");
+
+        response.then().statusCode(200);
+
+        List<User> users = response.as(
+                new TypeRef<List<User>>() {}
+        );
+        users.stream()
+                .filter(user -> user.getId() < 5)
+                .toList();
+    }
+
     }
