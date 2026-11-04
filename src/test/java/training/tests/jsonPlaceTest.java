@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 import training.tests.environment.*;
 import java.util.List;
 import io.restassured.common.mapper.TypeRef;
+import java.util.stream.Collectors;
 
 import java.util.List;
 
@@ -387,10 +388,13 @@ public class jsonPlaceTest {
                 .toList();
     }
 
+    @Test
     public void mapTest() {
         Response response = given(requestSpec)
                 .when()
                 .get("/users");
+
+        response.then().statusCode(200);
 
         List<User> users = response.as(
                 new TypeRef<List<User>>() {}
@@ -403,6 +407,29 @@ public class jsonPlaceTest {
         List<Integer> ids = users.stream()
                 .filter(user -> user.getId() > 5)
                 .map(user -> user.getId())
-                .toList();р
+                .toList();
+
+        List<String> names = users.stream()
+                .filter(user -> user.getId() > 5)
+                .map(User::getName)
+                .toList();
+
+                List<String> sortedEmails = users.stream()
+                        .map(User::getEmail)
+                        .sorted()
+                        .toList();
+
+        List<String> distinctEmails = users.stream()
+                .map(User::getEmail)
+                .distinct()
+                .toList();
+        System.out.println("Уникальные email: " + distinctEmails);
+
+        long count = users.stream()
+                .filter(user -> user.getEmail().endsWith(".com"))
+                .count();
+        System.out.println("count " + count);
+
     }
+
     }
