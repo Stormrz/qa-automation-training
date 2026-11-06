@@ -430,6 +430,9 @@ public class jsonPlaceTest {
                 .count();
         System.out.println("count " + count);
 
+        boolean matcher = users.stream()
+                .anyMatch(user -> user.getId() > 5)
+
     }
 
     }
