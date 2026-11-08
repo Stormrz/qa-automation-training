@@ -12,6 +12,8 @@ import org.testng.annotations.Test;
 import training.tests.environment.*;
 import java.util.List;
 import io.restassured.common.mapper.TypeRef;
+
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import java.util.List;
@@ -430,9 +432,45 @@ public class jsonPlaceTest {
                 .count();
         System.out.println("count " + count);
 
-        boolean matcher = users.stream()
-                .anyMatch(user -> user.getId() > 5)
+        boolean hasUserWithIdGreaterThan9 = users.stream()
+                .anyMatch(user -> user.getId() > 9);
 
+        boolean allHaveEmail = users.stream()
+                .allMatch(user -> user.getEmail() != null
+                        && !user.getEmail().isBlank());
+
+        boolean noUserWithIdZero = users.stream()
+                .noneMatch(user -> user.getId() == 0);
+
+        System.out.println(hasUserWithIdGreaterThan9);
+        System.out.println(allHaveEmail);
+        System.out.println(noUserWithIdZero);
+
+        Optional<User> userFirst = users.stream()
+                .filter(user -> user.getId() > 5)
+                .findFirst();
+        System.out.println("userFirst: " + userFirst);
     }
+
+     @Test
+    public void mapUser() {
+         Response response = given(requestSpec)
+                 .when()
+                 .get("/users");
+
+         response.then().statusCode(200);
+
+         List<User> users = response.as(
+                 new TypeRef<List<User>>() {}
+         );
+
+         String userName = users.stream()
+                 .filter(user -> user.getId() > 5)
+                 .findFirst()
+                 .map(User::getName)
+                 .orElse("Not found");
+
+         System.out.println("userName: " + userName);
+     }
 
     }
