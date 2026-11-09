@@ -13,6 +13,7 @@ import training.tests.environment.*;
 import java.util.List;
 import io.restassured.common.mapper.TypeRef;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -471,6 +472,56 @@ public class jsonPlaceTest {
                  .orElse("Not found");
 
          System.out.println("userName: " + userName);
+
+         Optional<User> findSpecUser = users.stream()
+                 .filter(user -> user.getId() == 100)
+                 .findFirst();
+         if (findSpecUser.isPresent()) {
+             String userName100 = findSpecUser.get()
+                             .getName();
+             System.out.println("User found: " + userName100);
+         } else {
+             System.out.println("User not found");
+         }
+
+         findSpecUser.ifPresentOrElse(
+                 user -> System.out.println("User found: " + user.getName()),
+                 () -> System.out.println("User not found")
+         );
      }
 
+    public void flatMapUser() {
+        Response response = given(requestSpec)
+                .when()
+                .get("/users");
+
+        response.then().statusCode(200);
+
+        List<User> allUsers = groups.stream()
+                .flatMap(groupsList -> groupList.stream())
+                .toList();
+
+        List<String> statuses = List.of(
+                "SUCCESS",
+                "FAILED",
+                "SUCCESS",
+                "PENDING",
+                "FAILED",
+                "SUCCESS"
+        );
+
+        long count = statuses.stream()
+                .filter(status -> status.equals("SUCCESS"))
+                .count();
+        System.out.println("SUCCESS count: " + count);
+
+        Map<String, List<String>> groupedStatuses = statuses.stream()
+                .collect("SUCCESS", "FAILED", )
+                .map(statuses.get())
+
+        Map<String, Long> statusCounts = statuses.stream()
+                .collect(Collectors.groupingBy(
+                        status -> status,
+                        Collectors.counting()
+                ));
     }
