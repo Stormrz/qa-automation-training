@@ -21,4 +21,6 @@ public class Payment {
     public String getCurrency() {
     return currency;
     }
+
+
 }

@@ -361,7 +361,8 @@ public class jsonPlaceTest {
         response.then().statusCode(200);
 
         List<User> users = response.as(
-                new TypeRef<List<User>>() {}
+                new TypeRef<List<User>>() {
+                }
         );
         System.out.println("Количество пользователей: " + users.size());
 
@@ -384,7 +385,8 @@ public class jsonPlaceTest {
         response.then().statusCode(200);
 
         List<User> users = response.as(
-                new TypeRef<List<User>>() {}
+                new TypeRef<List<User>>() {
+                }
         );
         users.stream()
                 .filter(user -> user.getId() < 5)
@@ -400,7 +402,8 @@ public class jsonPlaceTest {
         response.then().statusCode(200);
 
         List<User> users = response.as(
-                new TypeRef<List<User>>() {}
+                new TypeRef<List<User>>() {
+                }
         );
 
         List<String> emails = users.stream()
@@ -417,10 +420,10 @@ public class jsonPlaceTest {
                 .map(User::getName)
                 .toList();
 
-                List<String> sortedEmails = users.stream()
-                        .map(User::getEmail)
-                        .sorted()
-                        .toList();
+        List<String> sortedEmails = users.stream()
+                .map(User::getEmail)
+                .sorted()
+                .toList();
 
         List<String> distinctEmails = users.stream()
                 .map(User::getEmail)
@@ -453,53 +456,51 @@ public class jsonPlaceTest {
         System.out.println("userFirst: " + userFirst);
     }
 
-     @Test
+    @Test
     public void mapUser() {
-         Response response = given(requestSpec)
-                 .when()
-                 .get("/users");
-
-         response.then().statusCode(200);
-
-         List<User> users = response.as(
-                 new TypeRef<List<User>>() {}
-         );
-
-         String userName = users.stream()
-                 .filter(user -> user.getId() > 5)
-                 .findFirst()
-                 .map(User::getName)
-                 .orElse("Not found");
-
-         System.out.println("userName: " + userName);
-
-         Optional<User> findSpecUser = users.stream()
-                 .filter(user -> user.getId() == 100)
-                 .findFirst();
-         if (findSpecUser.isPresent()) {
-             String userName100 = findSpecUser.get()
-                             .getName();
-             System.out.println("User found: " + userName100);
-         } else {
-             System.out.println("User not found");
-         }
-
-         findSpecUser.ifPresentOrElse(
-                 user -> System.out.println("User found: " + user.getName()),
-                 () -> System.out.println("User not found")
-         );
-     }
-
-    public void flatMapUser() {
         Response response = given(requestSpec)
                 .when()
                 .get("/users");
 
         response.then().statusCode(200);
 
-        List<User> allUsers = groups.stream()
-                .flatMap(groupsList -> groupList.stream())
-                .toList();
+        List<User> users = response.as(
+                new TypeRef<List<User>>() {
+                }
+        );
+
+        String userName = users.stream()
+                .filter(user -> user.getId() > 5)
+                .findFirst()
+                .map(User::getName)
+                .orElse("Not found");
+
+        System.out.println("userName: " + userName);
+
+        Optional<User> findSpecUser = users.stream()
+                .filter(user -> user.getId() == 100)
+                .findFirst();
+        if (findSpecUser.isPresent()) {
+            String userName100 = findSpecUser.get()
+                    .getName();
+            System.out.println("User found: " + userName100);
+        } else {
+            System.out.println("User not found");
+        }
+
+        findSpecUser.ifPresentOrElse(
+                user -> System.out.println("User found: " + user.getName()),
+                () -> System.out.println("User not found")
+        );
+    }
+
+    @Test
+    public void flatMapUser() {
+        Response response = given(requestSpec)
+                .when()
+                .get("/users");
+
+        response.then().statusCode(200);
 
         List<String> statuses = List.of(
                 "SUCCESS",
@@ -515,13 +516,22 @@ public class jsonPlaceTest {
                 .count();
         System.out.println("SUCCESS count: " + count);
 
-        Map<String, List<String>> groupedStatuses = statuses.stream()
-                .collect("SUCCESS", "FAILED", )
-                .map(statuses.get())
-
         Map<String, Long> statusCounts = statuses.stream()
                 .collect(Collectors.groupingBy(
                         status -> status,
                         Collectors.counting()
                 ));
+
+        List<Integer> payments = List.of(
+                1000, 500, 1000, 2000, 500, 1000
+        );
+
+        Map<Integer, Long> paymentsMap = payments.stream()
+                .collect(Collectors.groupingBy(
+                        payment -> payment,
+                        Collectors.counting()
+                ));
+
+        System.out.println("SUCCESS count: " + paymentsMap);
     }
+}
