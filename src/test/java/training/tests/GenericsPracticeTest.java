@@ -1,6 +1,11 @@
+import io.restassured.mapper.ObjectMapper;
+import io.restassured.mapper.ObjectMapperDeserializationContext;
+import io.restassured.mapper.ObjectMapperSerializationContext;
 import org.testng.annotations.Test;
 import training.tests.environment.Box;
 import training.tests.environment.NumberBox;
+import training.tests.environment.User;
+import training.tests.environment.User;
 
 import java.util.List;
 
@@ -69,4 +74,5 @@ public class GenericsPracticeTest {
         NumberBox<Integer> doubleValue = new NumberBox<>(100);
         System.out.println(doubleValue.getDoubledValue());
     }
+
 }
