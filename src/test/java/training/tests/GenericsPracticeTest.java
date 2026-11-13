@@ -7,6 +7,7 @@ import training.tests.environment.NumberBox;
 import training.tests.environment.User;
 import training.tests.environment.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenericsPracticeTest {
@@ -75,4 +76,22 @@ public class GenericsPracticeTest {
         System.out.println(doubleValue.getDoubledValue());
     }
 
+    public void addNumber(List<? super Number> numbers) {
+        numbers.add(100);
+        numbers.add(99.5);
+    }
+
+    @Test
+    public void wildcardsTest() {
+        List<Number> numbers = new ArrayList<>();
+
+        addNumber(numbers);
+
+        System.out.println(numbers);
+        List<Object> objects = new ArrayList<>();
+
+        addNumber(objects);
+
+        System.out.println(objects);
+    }
 }
