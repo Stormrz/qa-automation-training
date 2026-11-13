@@ -70,7 +70,7 @@ public class ExceptionsPracticeTest {
     }
 
     validatePayment(int amount, String currency) {
-
+1
     }
 
 }
