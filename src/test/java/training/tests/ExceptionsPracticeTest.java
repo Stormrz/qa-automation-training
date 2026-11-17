@@ -1,5 +1,6 @@
 package training.tests;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class ExceptionsPracticeTest {
@@ -69,8 +70,26 @@ public class ExceptionsPracticeTest {
         System.out.println("Проверка завершена");
     }
 
-    validatePayment(int amount, String currency) {
-1
+    @Test
+    public void validPaymentTest() {
+        validatePayment(1000, "RUB");
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void invalidAmountTest() {
+        validatePayment(-100, "RUB");
+    }
+
+    public void validatePayment(int amount, String currency) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Сумма должна быть положительной");
+        }
+
+        if (currency == null || currency.isBlank()) {
+            throw new IllegalArgumentException("Валюта должна быть указана");
+        }
+
+        System.out.println("Payment is valid");
     }
 
 }
