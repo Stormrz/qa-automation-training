@@ -18,4 +18,10 @@ public class UserClient {
                 .when()
                 .get("/users/{id}");
     }
+
+   public Response getAllUsers() {
+        return given(requestSpec)
+                .when()
+                .get("/users");
+   }
 }
