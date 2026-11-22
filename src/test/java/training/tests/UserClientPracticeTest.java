@@ -3,14 +3,14 @@ package training.tests;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.assertj.core.api.AbstractIterableAssert;
 import org.testng.annotations.Test;
 import training.tests.environment.User;
-import training.tests.environment.UserClient;
+import training.tests.ATStructure.UserClient;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserClientPracticeTest {
     @Test
@@ -20,7 +20,13 @@ public class UserClientPracticeTest {
         UserClient userClient = new UserClient(requestSpec);
         Response response = userClient.getAllUsers();
         List<User> users = response.as(new TypeRef<List<User>>() {});
-        Response response = getAllClients();
         response.then().statusCode(200);
+        assertThat(users).isNotNull();
+        assertThat(users).hasSize(10);
+
+        User First = users.get(0);
+        assertThat(First.getId()).isEqualTo(1);
+        assertThat(First.getName()).isEqualTo( "Leanne Graham");
+        assertThat(First.getUsername()).isEqualTo("Bret");
     }
 }

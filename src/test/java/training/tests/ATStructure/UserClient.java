@@ -1,4 +1,4 @@
-package training.tests.environment;
+package training.tests.ATStructure;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;

@@ -1,7 +1,6 @@
 package training.tests;
 
 import io.restassured.http.ContentType;
-import io.restassured.internal.RestAssuredResponseOptionsImpl;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -9,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import training.tests.ATStructure.UserClient;
 import training.tests.environment.*;
 import java.util.List;
 import io.restassured.common.mapper.TypeRef;
@@ -16,8 +16,6 @@ import io.restassured.common.mapper.TypeRef;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import java.util.List;
 
 import static io.restassured.RestAssured.expect;
 import static io.restassured.RestAssured.given;
