@@ -8,6 +8,7 @@ import static io.restassured.RestAssured.given;
 public class BaseApiTest {
 
     protected UserClient userClient;
+    protected PostClient postClient;
 
     @BeforeClass
     public void setUp() {
