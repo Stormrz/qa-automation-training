@@ -16,5 +16,6 @@ public class BaseApiTest {
                 .baseUri("https://jsonplaceholder.typicode.com");
 
         userClient = new UserClient(requestSpec);
+        postClient = new PostClient(requestSpec);
     }
 }

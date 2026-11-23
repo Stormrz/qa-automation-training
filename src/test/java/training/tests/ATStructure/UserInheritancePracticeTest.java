@@ -11,4 +11,10 @@ public class UserInheritancePracticeTest extends BaseApiTest {
 
         response.then().statusCode(200);
     }
+
+    @Test
+    public void getAllPosts() {
+        Response response = postClient.getAllPosts();
+        response.then().statusCode(200);
+    }
 }
