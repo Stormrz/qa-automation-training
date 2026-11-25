@@ -2,7 +2,8 @@ package training.tests.ATStructure;
 
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import static org.hamcrest.Matchers.equalTo;
+
+import static org.hamcrest.Matchers.*;
 
 public class PostApiTest extends BaseApiTest {
 
@@ -41,6 +42,51 @@ public class PostApiTest extends BaseApiTest {
     @Test
     public void negativeGetPostTest() {
         Response response = postClient.getPostById(9999);
+        response.then()
+                .statusCode(404);
+    }
+
+    @Test
+    public void negativePatchPostTest() {
+        Response response = postClient.updatePostTitle(9999, "New title");
+
+        response.then()
+                .statusCode(200);
+    }
+
+    @Test
+    public void getPostByIdTest() {
+        Response response = postClient.getPostById(1);
+
+        response.then()
+                .statusCode(200)
+                .body("id", equalTo(1))
+                .body("title", not(emptyString()))
+                .body("body", not(emptyString()))
+                .body("userId", instanceOf(Integer.class))
+                .body("userId", is(greaterThan(0)));
+    }
+
+    @Test
+    public void negativeIdZero() {
+        Response response = postClient.getPostById(0);
+
+        response.then()
+                .statusCode(400);
+    }
+
+    @Test
+    public void negativeIdBelowZero() {
+        Response response = postClient.getPostById(-2);
+
+        response.then()
+                .statusCode(400);
+    }
+
+    @Test
+    public void negativeIdNotExist() {
+        Response response = postClient.getPostById(99999);
+
         response.then()
                 .statusCode(404);
     }
