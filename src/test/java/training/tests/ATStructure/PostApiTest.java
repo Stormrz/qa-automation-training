@@ -90,4 +90,16 @@ public class PostApiTest extends BaseApiTest {
         response.then()
                 .statusCode(404);
     }
+
+    @Test
+    public void validatePostResponseTest() {
+        Response response = postClient.getPostById(5);
+
+        response.then()
+                .statusCode(200)
+                .body("id", 5)
+                .body("userId", is(greaterThan(0)))
+                .body("title", hasLength(5))
+                .body("body", hasLength(10))
+                .body("password", nullValue());
 }
